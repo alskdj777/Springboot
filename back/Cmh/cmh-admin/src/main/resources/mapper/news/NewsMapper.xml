@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmh.mapper.NewsMapper">
+
+    <resultMap type="News" id="NewsResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="image"    column="image"    />
+        <result property="content"    column="content"    />
+        <result property="summary"    column="summary"    />
+        <result property="author"    column="author"    />
+        <result property="createBy"    column="createBy"    />
+    </resultMap>
+
+    <sql id="selectNewsVo">
+        select id, title, image, content, summary, author, createBy from news
+    </sql>
+
+    <select id="selectNewsList" parameterType="News" resultMap="NewsResult">
+        <include refid="selectNewsVo"/>
+        <where>
+            <if test="title != null and title != ''"> and title LIKE CONCAT('%', #{title}, '%')</if>
+            <if test="image != null and image != ''"> and image LIKE CONCAT('%', #{image}, '%')</if>
+            <if test="content != null and content != ''"> and content LIKE CONCAT('%', #{content}, '%')</if>
+            <if test="summary != null and summary != ''"> and summary LIKE CONCAT('%', #{summary}, '%')</if>
+            <if test="author != null and author != ''"> and author LIKE CONCAT('%', #{author}, '%')</if>
+            <if test="createBy != null and createBy != ''"> and createBy LIKE CONCAT('%', #{createBy}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectNewsById" parameterType="Long" resultMap="NewsResult">
+        <include refid="selectNewsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertNews" parameterType="News" useGeneratedKeys="true" keyProperty="id">
+        insert into news
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="image != null">image,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="summary != null">summary,</if>
+            <if test="author != null and author != ''">author,</if>
+            <if test="createBy != null and createBy != ''">createBy,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="image != null">#{image},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="summary != null">#{summary},</if>
+            <if test="author != null and author != ''">#{author},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateNews" parameterType="News">
+        update news
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="summary != null">summary = #{summary},</if>
+            <if test="author != null and author != ''">author = #{author},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNewsById" parameterType="Long">
+        delete from news where id = #{id}
+    </delete>
+
+    <delete id="deleteNewsByIds" parameterType="String">
+        delete from news where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
+
+<!--<?xml version="1.0" encoding="UTF-8" ?>-->
+<!--<!DOCTYPE mapper-->
+<!--PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"-->
+<!--"http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+<!--<mapper namespace="com.cmh.mapper.NewsMapper">-->
+
+<!--    <resultMap type="News" id="NewsResult">-->
+<!--        <result property="id"    column="id"    />-->
+<!--        <result property="title"    column="title"    />-->
+<!--        <result property="image"    column="image"    />-->
+<!--        <result property="content"    column="content"    />-->
+<!--        <result property="summary"    column="summary"    />-->
+<!--        <result property="author"    column="author"    />-->
+<!--        <result property="createBy"    column="createBy"    />-->
+<!--    </resultMap>-->
+
+<!--    <sql id="selectNewsVo">-->
+<!--        select id, title, image, content, summary, author,createBy from news-->
+<!--    </sql>-->
+
+<!--    <select id="selectNewsList" parameterType="News" resultMap="NewsResult">-->
+<!--        <include refid="selectNewsVo"/>-->
+<!--        <where>-->
+<!--            <if test="title != null  and title != ''"> and title = #{title}</if>-->
+<!--            <if test="image != null  and image != ''"> and image = #{image}</if>-->
+<!--            <if test="content != null  and content != ''"> and content = #{content}</if>-->
+<!--            <if test="summary != null  and summary != ''"> and summary = #{summary}</if>-->
+<!--            <if test="author != null  and author != ''"> and author = #{author}</if>-->
+<!--            <if test="createBy != null  and createBy != ''"> and createBy = #{createBy}</if>-->
+<!--        </where>-->
+<!--    </select>-->
+
+<!--    <select id="selectNewsById" parameterType="Long" resultMap="NewsResult">-->
+<!--        <include refid="selectNewsVo"/>-->
+<!--        where id = #{id}-->
+<!--    </select>-->
+
+<!--    <insert id="insertNews" parameterType="News" useGeneratedKeys="true" keyProperty="id">-->
+<!--        insert into news-->
+<!--        <trim prefix="(" suffix=")" suffixOverrides=",">-->
+<!--            <if test="title != null and title != ''">title,</if>-->
+<!--            <if test="image != null">image,</if>-->
+<!--            <if test="content != null and content != ''">content,</if>-->
+<!--            <if test="summary != null">summary,</if>-->
+<!--            <if test="author != null and author != ''">author,</if>-->
+<!--            <if test="createBy != null and createBy != ''">createBy,</if>-->
+<!--         </trim>-->
+<!--        <trim prefix="values (" suffix=")" suffixOverrides=",">-->
+<!--            <if test="title != null and title != ''">#{title},</if>-->
+<!--            <if test="image != null">#{image},</if>-->
+<!--            <if test="content != null and content != ''">#{content},</if>-->
+<!--            <if test="summary != null">#{summary},</if>-->
+<!--            <if test="author != null and author != ''">#{author},</if>-->
+<!--            <if test="createBy != null and createBy != ''">#{createBy},</if>-->
+<!--         </trim>-->
+<!--    </insert>-->
+
+<!--    <update id="updateNews" parameterType="News">-->
+<!--        update news-->
+<!--        <trim prefix="SET" suffixOverrides=",">-->
+<!--            <if test="title != null and title != ''">title = #{title},</if>-->
+<!--            <if test="image != null">image = #{image},</if>-->
+<!--            <if test="content != null and content != ''">content = #{content},</if>-->
+<!--            <if test="summary != null">summary = #{summary},</if>-->
+<!--            <if test="author != null and author != ''">author = #{author},</if>-->
+<!--        </trim>-->
+<!--        where id = #{id}-->
+<!--    </update>-->
+
+<!--    <delete id="deleteNewsById" parameterType="Long">-->
+<!--        delete from news where id = #{id}-->
+<!--    </delete>-->
+
+<!--    <delete id="deleteNewsByIds" parameterType="String">-->
+<!--        delete from news where id in-->
+<!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+<!--</mapper>-->
+
+
+

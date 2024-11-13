@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmh.mapper.TenantMapper">
+
+    <resultMap type="Tenant" id="TenantResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="icon"    column="icon"    />
+        <result property="contact"    column="contact"    />
+        <result property="phone"    column="phone"    />
+        <result property="admin"    column="admin"    />
+        <result property="notes"    column="notes"    />
+        <result property="createBy"    column="createBy"    />
+    </resultMap>
+
+    <sql id="selectTenantVo">
+        select id, name, icon, contact, phone, admin, notes from tenant
+    </sql>
+
+    <select id="selectTenantList" parameterType="Tenant" resultMap="TenantResult">
+        <include refid="selectTenantVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="contact != null  and contact != ''"> and contact like concat('%', #{contact}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
+            <if test="admin != null  and admin != ''"> and admin like concat('%', #{admin}, '%')</if>
+            <if test="notes != null  and notes != ''"> and notes = #{notes}</if>
+            <if test="createBy != null  and createBy != ''"> and createBy = #{createBy}</if>
+        </where>
+    </select>
+
+    <select id="selectTenantById" parameterType="Long" resultMap="TenantResult">
+        <include refid="selectTenantVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTenant" parameterType="Tenant" useGeneratedKeys="true" keyProperty="id">
+        insert into tenant
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="icon != null">icon,</if>
+            <if test="contact != null and contact != ''">contact,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="admin != null">admin,</if>
+            <if test="notes != null">notes,</if>
+            <if test="createBy != null and createBy != ''">createBy,</if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="icon != null">#{icon},</if>
+            <if test="contact != null and contact != ''">#{contact},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="admin != null">#{admin},</if>
+            <if test="notes != null">#{notes},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+
+        </trim>
+    </insert>
+
+    <update id="updateTenant" parameterType="Tenant">
+        update tenant
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="icon != null">icon = #{icon},</if>
+            <if test="contact != null and contact != ''">contact = #{contact},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="admin != null">admin = #{admin},</if>
+            <if test="notes != null">notes = #{notes},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTenantById" parameterType="Long">
+        delete from tenant where id = #{id}
+    </delete>
+
+    <delete id="deleteTenantByIds" parameterType="String">
+        delete from tenant where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

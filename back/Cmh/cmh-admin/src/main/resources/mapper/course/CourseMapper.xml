@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmh.mapper.CourseMapper">
+
+    <resultMap type="Course" id="CourseResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="cover"    column="cover"    />
+        <result property="description"    column="description"    />
+        <result property="orders"    column="orders"    />
+        <result property="author"    column="author"    />
+        <result property="createBy"    column="createBy"    />
+    </resultMap>
+
+    <sql id="selectCourseVo">
+        select id, title, cover, description, orders, author, video from course
+    </sql>
+
+    <select id="selectCourseList" parameterType="Course" resultMap="CourseResult">
+        <include refid="selectCourseVo"/>
+        <where>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="orders != null "> and orders = #{orders}</if>
+            <if test="createBy != null  and createBy != ''"> and createBy = #{createBy}</if>
+
+        </where>
+    </select>
+
+    <select id="selectCourseById" parameterType="Long" resultMap="CourseResult">
+        <include refid="selectCourseVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCourse" parameterType="Course" useGeneratedKeys="true" keyProperty="id">
+        insert into course
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="cover != null">cover,</if>
+            <if test="description != null">description,</if>
+            <if test="orders != null">orders,</if>
+            <if test="author != null and author != ''">author,</if>
+            <if test="createBy != null and createBy != ''">createBy,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="cover != null">#{cover},</if>
+            <if test="description != null">#{description},</if>
+            <if test="orders != null">#{orders},</if>
+            <if test="author != null and author != ''">#{author},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCourse" parameterType="Course">
+        update course
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="cover != null">cover = #{cover},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="orders != null">orders = #{orders},</if>
+            <if test="author != null and author != ''">author = #{author},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCourseById" parameterType="Long">
+        delete from course where id = #{id}
+    </delete>
+
+    <delete id="deleteCourseByIds" parameterType="String">
+        delete from course where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
+
+
+
+        <!--<?xml version="1.0" encoding="UTF-8" ?>-->
+        <!--<!DOCTYPE mapper-->
+        <!--PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"-->
+        <!--"http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+        <!--<mapper namespace="com.cmh.mapper.CourseMapper">-->
+
+        <!--    <resultMap type="Course" id="CourseResult">-->
+        <!--        <result property="id"    column="id"    />-->
+        <!--        <result property="title"    column="title"    />-->
+        <!--        <result property="cover"    column="cover"    />-->
+        <!--        <result property="description"    column="description"    />-->
+        <!--        <result property="orders"    column="orders"    />-->
+        <!--        <result property="author"    column="author"    />-->
+        <!--        <result property="createBy"    column="createBy"    />-->
+        <!--        <result property="video"    column="video"    />-->
+        <!--    </resultMap>-->
+
+        <!--    <sql id="selectCourseVo">-->
+        <!--        select id, title, cover, description, orders, author, video from course-->
+        <!--    </sql>-->
+
+        <!--    <select id="selectCourseList" parameterType="Course" resultMap="CourseResult">-->
+        <!--        <include refid="selectCourseVo"/>-->
+        <!--        <where>-->
+        <!--            <if test="title != null  and title != ''"> and title = #{title}</if>-->
+        <!--            <if test="orders != null "> and orders = #{orders}</if>-->
+        <!--            <if test="createBy != null  and createBy != ''"> and createBy = #{createBy}</if>-->
+
+        <!--        </where>-->
+        <!--    </select>-->
+
+        <!--    <select id="selectCourseById" parameterType="Long" resultMap="CourseResult">-->
+        <!--        <include refid="selectCourseVo"/>-->
+        <!--        where id = #{id}-->
+        <!--    </select>-->
+
+        <!--    <insert id="insertCourse" parameterType="Course" useGeneratedKeys="true" keyProperty="id">-->
+        <!--        insert into course-->
+        <!--        <trim prefix="(" suffix=")" suffixOverrides=",">-->
+        <!--            <if test="title != null and title != ''">title,</if>-->
+        <!--            <if test="cover != null">cover,</if>-->
+        <!--            <if test="description != null">description,</if>-->
+        <!--            <if test="orders != null">orders,</if>-->
+        <!--            <if test="author != null and author != ''">author,</if>-->
+        <!--            <if test="video != null">video,</if> &lt;!&ndash; 添加视频字段 &ndash;&gt;-->
+        <!--            <if test="createBy != null and createBy != ''">createBy,</if>-->
+        <!--        </trim>-->
+        <!--        <trim prefix="values (" suffix=")" suffixOverrides=",">-->
+        <!--            <if test="title != null and title != ''">#{title},</if>-->
+        <!--            <if test="cover != null">#{cover},</if>-->
+        <!--            <if test="description != null">#{description},</if>-->
+        <!--            <if test="orders != null">#{orders},</if>-->
+        <!--            <if test="author != null and author != ''">#{author},</if>-->
+        <!--            <if test="video != null">#{video},</if>-->
+        <!--            <if test="createBy != null and createBy != ''">#{createBy},</if>-->
+        <!--        </trim>-->
+        <!--    </insert>-->
+
+        <!--    <update id="updateCourse" parameterType="Course">-->
+        <!--        update course-->
+        <!--        <trim prefix="SET" suffixOverrides=",">-->
+        <!--            <if test="title != null and title != ''">title = #{title},</if>-->
+        <!--            <if test="cover != null">cover = #{cover},</if>-->
+        <!--            <if test="description != null">description = #{description},</if>-->
+        <!--            <if test="orders != null">orders = #{orders},</if>-->
+        <!--            <if test="author != null and author != ''">author = #{author},</if>-->
+        <!--            <if test="video != null">video = #{video},</if>-->
+        <!--        </trim>-->
+        <!--        where id = #{id}-->
+        <!--    </update>-->
+
+        <!--    <delete id="deleteCourseById" parameterType="Long">-->
+        <!--        delete from course where id = #{id}-->
+        <!--    </delete>-->
+
+        <!--    <delete id="deleteCourseByIds" parameterType="String">-->
+        <!--        delete from course where id in-->
+        <!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
+        <!--            #{id}-->
+        <!--        </foreach>-->
+        <!--    </delete>-->
+        <!--</mapper>-->
+
+
+
+        <!--<?xml version="1.0" encoding="UTF-8" ?>-->
+<!--<!DOCTYPE mapper-->
+<!--PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"-->
+<!--"http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+<!--<mapper namespace="com.cmh.mapper.CourseMapper">-->
+
+<!--    <resultMap type="Course" id="CourseResult">-->
+<!--        <result property="id"    column="id"    />-->
+<!--        <result property="title"    column="title"    />-->
+<!--        <result property="cover"    column="cover"    />-->
+<!--        <result property="description"    column="description"    />-->
+<!--        <result property="orders"    column="orders"    />-->
+<!--        <result property="author"    column="author"    />-->
+<!--        <result property="createBy"    column="createBy"    />-->
+<!--        <result property="video"    column="video"    />-->
+<!--    </resultMap>-->
+
+<!--    <sql id="selectCourseVo">-->
+<!--        select id, title, cover, description, orders, author, video from course-->
+<!--    </sql>-->
+
+<!--    <select id="selectCourseList" parameterType="Course" resultMap="CourseResult">-->
+<!--        <include refid="selectCourseVo"/>-->
+<!--        <where>-->
+<!--            <if test="title != null  and title != ''"> and title = #{title}</if>-->
+<!--            <if test="orders != null "> and orders = #{orders}</if>-->
+<!--            <if test="createBy != null  and createBy != ''"> and createBy = #{createBy}</if>-->
+
+<!--        </where>-->
+<!--    </select>-->
+
+<!--    <select id="selectCourseById" parameterType="Long" resultMap="CourseResult">-->
+<!--        <include refid="selectCourseVo"/>-->
+<!--        where id = #{id}-->
+<!--    </select>-->
+
+<!--    <insert id="insertCourse" parameterType="Course" useGeneratedKeys="true" keyProperty="id">-->
+<!--        insert into course-->
+<!--        <trim prefix="(" suffix=")" suffixOverrides=",">-->
+<!--            <if test="title != null and title != ''">title,</if>-->
+<!--            <if test="cover != null">cover,</if>-->
+<!--            <if test="description != null">description,</if>-->
+<!--            <if test="orders != null">orders,</if>-->
+<!--            <if test="author != null and author != ''">author,</if>-->
+<!--            <if test="video != null">video,</if> &lt;!&ndash; 添加视频字段 &ndash;&gt;-->
+<!--            <if test="createBy != null and createBy != ''">createBy,</if>-->
+<!--        </trim>-->
+<!--        <trim prefix="values (" suffix=")" suffixOverrides=",">-->
+<!--            <if test="title != null and title != ''">#{title},</if>-->
+<!--            <if test="cover != null">#{cover},</if>-->
+<!--            <if test="description != null">#{description},</if>-->
+<!--            <if test="orders != null">#{orders},</if>-->
+<!--            <if test="author != null and author != ''">#{author},</if>-->
+<!--            <if test="video != null">#{video},</if>-->
+<!--            <if test="createBy != null and createBy != ''">#{createBy},</if>-->
+<!--        </trim>-->
+<!--    </insert>-->
+
+<!--    <update id="updateCourse" parameterType="Course">-->
+<!--        update course-->
+<!--        <trim prefix="SET" suffixOverrides=",">-->
+<!--            <if test="title != null and title != ''">title = #{title},</if>-->
+<!--            <if test="cover != null">cover = #{cover},</if>-->
+<!--            <if test="description != null">description = #{description},</if>-->
+<!--            <if test="orders != null">orders = #{orders},</if>-->
+<!--            <if test="author != null and author != ''">author = #{author},</if>-->
+<!--            <if test="video != null">video = #{video},</if>-->
+<!--        </trim>-->
+<!--        where id = #{id}-->
+<!--    </update>-->
+
+<!--    <delete id="deleteCourseById" parameterType="Long">-->
+<!--        delete from course where id = #{id}-->
+<!--    </delete>-->
+
+<!--    <delete id="deleteCourseByIds" parameterType="String">-->
+<!--        delete from course where id in-->
+<!--        <foreach item="id" collection="array" open="(" separator="," close=")">-->
+<!--            #{id}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+<!--</mapper>-->
